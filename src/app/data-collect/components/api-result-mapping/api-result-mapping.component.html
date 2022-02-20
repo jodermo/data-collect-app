@@ -1,0 +1,35 @@
+<div class="result-mapping">
+  <mat-card>
+    <mat-card-content>
+      <table
+        *ngIf="dataCollect.api.mappingAttributesDataArray && dataCollect.api.mappingAttributesDataArray.length > 0">
+        <thead>
+        <tr>
+          <th [colSpan]="2">Result Attribute</th>
+          <th></th>
+          <th>CSV</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let mappingAttribute of dataCollect.api.mappingAttributesDataArray">
+          <th><mat-icon>input</mat-icon></th>
+          <td>
+            <span *ngFor="let key of mappingAttribute.keyMap">
+              <i>{{key}}</i>.
+            </span>
+            <span>
+              <b>
+                {{mappingAttribute.key}}
+              </b>
+            </span>
+          </td>
+          <td><mat-icon>arrow_right_alt</mat-icon></td>
+          <td>
+            <b><i>{{mappingAttribute.attribute}}</i></b>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

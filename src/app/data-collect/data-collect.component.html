@@ -1,0 +1,27 @@
+
+<div class="data-collect">
+
+  <app-data-collect-header></app-data-collect-header>
+
+  <app-start-view *ngIf="!dataCollect.started" class="flex-item"></app-start-view>
+
+  <mat-tab-group class="flex-item" mat-stretch-tabs animationDuration="0ms" [selectedIndex]="dataCollect.selectedTab.value" (selectedIndexChange)="dataCollect.selectedTab.setValue($event)" *ngIf="dataCollect.started">
+    <mat-tab *ngFor="let tab of dataCollect.availableTabs(); let index = index" [label]="tab.label">
+      <ng-container *ngIf="tab.component === 'data-table-editor'">
+        <app-data-table-editor></app-data-table-editor>
+      </ng-container>
+      <ng-container *ngIf="tab.component === 'api-search'">
+        <app-api-search></app-api-search>
+      </ng-container>
+      <ng-container *ngIf="tab.component === 'api-result' && dataCollect.api.searches?.length">
+        <app-api-result></app-api-result>
+      </ng-container>
+      <ng-container *ngIf="tab.component === 'api-result-mapping' && dataCollect.api.searches?.length ">
+        <app-api-result-mapping></app-api-result-mapping>
+      </ng-container>
+    </mat-tab>
+  </mat-tab-group>
+
+  <app-data-collect-footer></app-data-collect-footer>
+</div>
+

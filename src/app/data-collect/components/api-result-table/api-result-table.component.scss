@@ -1,0 +1,22 @@
+@use "../../scss/styles";
+
+table {
+  tr {
+    & > th {
+      border-bottom: 1px solid #ccc;
+    }
+    & > td {
+      border-bottom: 1px solid #ccc;
+    }
+    &:last-child {
+      & > th {
+        border-bottom: none;
+      }
+      & > td {
+        border-bottom: none;
+      }
+    }
+  }
+
+
+}

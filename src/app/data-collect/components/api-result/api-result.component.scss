@@ -1,0 +1,25 @@
+@use "../../scss/styles";
+
+.mat-accordion {
+  &.status-200 {
+    &>.mat-expansion-panel{
+      &>.mat-expansion-panel-header{
+        background: #cfffdd;
+      }
+    }
+  }
+  &.status-400 {
+    &>.mat-expansion-panel{
+      &>.mat-expansion-panel-header{
+        background: #e1cfff;
+      }
+    }
+  }
+  &.status-500 {
+    &>.mat-expansion-panel{
+      &>.mat-expansion-panel-header{
+        background: #ffcfcf;
+      }
+    }
+  }
+}

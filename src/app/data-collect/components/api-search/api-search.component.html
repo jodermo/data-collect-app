@@ -1,0 +1,240 @@
+<div class="api-search">
+
+  <mat-card>
+    <mat-card-actions align="end">
+
+      <button *ngIf="dataCollect.started" mat-flat-button class="example-icon" aria-label="Examples"
+              [disabled]="!dataCollect.canSave"
+              [matMenuTriggerFor]="menu" #menuTrigger>
+        <mat-icon>help</mat-icon>
+        <span>Examples</span>
+      </button>
+      <mat-menu #menu="matMenu" aria-label="Rest Configuration">
+        <ng-container *ngIf="dataCollect.started">
+          <button mat-menu-item *ngFor="let example of dataCollect.api.examples"
+                  (click)="dataCollect.api.loadExampleApi(example)">
+            <mat-icon>{{example.icon}}</mat-icon>
+            <span>{{example.name}}</span>
+          </button>
+        </ng-container>
+      </mat-menu>
+      <button mat-raised-button color="primary"
+              [disabled]="dataCollect.api.urlValidationError() !== false"
+              (click)="dataCollect.api.newSearch()">Run API Call
+      </button>
+    </mat-card-actions>
+
+    <mat-card-subtitle *ngIf="!dataCollect.api.getSearchUrl()">
+      Type URL for API
+    </mat-card-subtitle>
+
+
+    <mat-card-actions align="start">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>URL</mat-label>
+        <input matInput [(ngModel)]="dataCollect.api.url" placeholder="URL">
+      </mat-form-field>
+      <p *ngIf="dataCollect.api.urlValidationError()" class="error-message">
+        <span >{{dataCollect.api.urlValidationError()}}</span>
+      </p>
+      <p *ngIf="!dataCollect.api.urlValidationError()" class="message">
+        <span >OK</span>
+      </p>
+    </mat-card-actions>
+
+    <mat-card-subtitle *ngIf="dataCollect.api.getSearchUrl()">
+      URL preview: <span><b>{{dataCollect.api.getSearchUrl()}}</b></span>
+    </mat-card-subtitle>
+
+    <mat-card-actions align="start">
+      <div>
+        <label id="method-radio-group-label">Method</label>
+        <mat-radio-group
+          aria-label="Method"
+          aria-labelledby="method-radio-group-label"
+          class="radio-group"
+          [(ngModel)]="dataCollect.api.method">
+          <mat-radio-button class="radio-button" *ngFor="let method of dataCollect.api.methods"
+                            [value]="method">
+            {{method}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </mat-card-actions>
+    <mat-card-actions align="start">
+      <div class="checkbox-container" *ngIf="dataCollect.api.method === 'GET'">
+        <mat-checkbox [(ngModel)]="dataCollect.api.slashSeparator" (change)="dataCollect.api.inputChange($event)">
+          Use slashes ("/") to separate attributes
+        </mat-checkbox>
+      </div>
+      <div class="checkbox-container" *ngIf="dataCollect.api.method === 'POST'">
+        <mat-checkbox [(ngModel)]="dataCollect.api.attributesAsBody" (change)="dataCollect.api.inputChange($event)">
+          Send attributes as body data in request headers
+        </mat-checkbox>
+      </div>
+    </mat-card-actions>
+
+
+    <mat-card-actions align="start">
+      <div class="checkbox-container">
+        <mat-checkbox [(ngModel)]="dataCollect.api.addSuffix" (change)="dataCollect.api.inputChange($event)">
+          URL Suffix
+        </mat-checkbox>
+      </div>
+    </mat-card-actions>
+
+    <mat-card-subtitle *ngIf="dataCollect.api.addSuffix">
+      Use URL suffix, e.g. file names
+    </mat-card-subtitle>
+
+    <mat-card-content *ngIf="dataCollect.api.addSuffix">
+
+      <mat-form-field appearance="fill" class="full-width">
+        <input matInput
+               [(ngModel)]="dataCollect.api.urlSuffix"
+               (change)="dataCollect.api.inputChange($event)"
+               placeholder="Attribute Name"
+        >
+      </mat-form-field>
+    </mat-card-content>
+
+
+    <mat-card-actions align="start">
+      <div class="checkbox-container">
+        <mat-checkbox [(ngModel)]="dataCollect.api.sendKey" (change)="dataCollect.api.inputChange($event)">
+          API Key / Token
+        </mat-checkbox>
+      </div>
+    </mat-card-actions>
+
+    <mat-card-subtitle *ngIf="dataCollect.api.sendKey">
+      User API authentication key
+    </mat-card-subtitle>
+
+    <mat-card-content *ngIf="dataCollect.api.sendKey">
+      <table>
+        <thead>
+        <tr>
+          <th>
+            attribute name
+          </th>
+          <th>
+            key
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <input matInput
+                     [(ngModel)]="dataCollect.api.keyAttribute"
+                     (change)="dataCollect.api.inputChange($event)"
+                     placeholder="Attribute Name"
+              >
+            </mat-form-field>
+
+          </td>
+          <td>
+            <mat-form-field appearance="fill" class="full-width">
+              <input matInput
+                     [(ngModel)]="dataCollect.api.key"
+                     (change)="dataCollect.api.inputChange($event)"
+                     placeholder="API Key / Token"
+              >
+            </mat-form-field>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+    <mat-card-content *ngIf="dataCollect.api.sendKey">
+      <div class="checkbox-container">
+        <mat-checkbox [(ngModel)]="dataCollect.api.sendKeyAsBearer" (change)="dataCollect.api.inputChange($event)">
+          Send API Key / Token as Bearer WWW-Authenticate Header
+        </mat-checkbox>
+      </div>
+    </mat-card-content>
+
+
+    <mat-card-actions align="start">
+      <div class="checkbox-container">
+        <mat-checkbox [(ngModel)]="dataCollect.api.sendCustomAttributes" (change)="dataCollect.api.inputChange($event)">
+          Custom Attributes
+        </mat-checkbox>
+      </div>
+    </mat-card-actions>
+
+    <mat-card-subtitle *ngIf="dataCollect.api.sendCustomAttributes">
+      Set custom attributes for API call
+    </mat-card-subtitle>
+
+    <mat-card-content *ngIf="dataCollect.api.sendCustomAttributes">
+      <table *ngIf="dataCollect.api.sendCustomAttributes">
+        <tbody>
+        <tr *ngFor="let attributeName of dataCollect.api.attributes">
+          <th>
+            {{attributeName}}
+          </th>
+          <td>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <input matInput
+                     [(ngModel)]="dataCollect.api.attributeValue[attributeName]"
+                     (change)="dataCollect.api.inputChange($event)"
+                     placeholder="Value for {{attributeName}}"
+              >
+            </mat-form-field>
+
+          </td>
+          <td>
+            <button mat-icon-button aria-label="remove attribute"
+                    (click)="dataCollect.api.removeAttribute(attributeName)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Attribute</mat-label>
+              <input matInput
+                     [(ngModel)]="dataCollect.api.newAttributeName"
+                     (change)="dataCollect.api.inputChange($event)"
+                     placeholder="Attribute Name"
+              >
+            </mat-form-field>
+            <p class="error-message" *ngIf="dataCollect.api.attributeValidationError()">
+              {{dataCollect.api.attributeValidationError()}}
+            </p>
+            <p class="message" *ngIf="!dataCollect.api.attributeValidationError()">
+              OK
+            </p>
+          </td>
+          <td>
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Value</mat-label>
+              <input matInput
+                     [(ngModel)]="dataCollect.api.newAttributeValue"
+                     (change)="dataCollect.api.inputChange($event)"
+                     placeholder="Attribute Name"
+              >
+            </mat-form-field>
+          </td>
+          <td>
+            <div class="info-box">
+              <button mat-icon-button aria-label="remove attribute"
+                      [disabled]="dataCollect.api.attributeValidationError() !== false"
+                      (click)="dataCollect.api.addAttribute()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+
+  </mat-card>
+</div>

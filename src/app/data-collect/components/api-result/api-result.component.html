@@ -1,0 +1,99 @@
+<div class="api-result" *ngIf="dataCollect.api.searches?.length">
+  <mat-card>
+    <mat-card-content>
+      <mat-accordion *ngFor="let apiSearch of dataCollect.api.searches"
+                     class="status-{{apiSearch.httpRequest?.status}}"
+
+      >
+        <mat-expansion-panel [expanded]="dataCollect.api.search === apiSearch"
+                             [disabled]="apiSearch.httpRequest.status !== 200">
+          <mat-expansion-panel-header (click)="dataCollect.api.selectSearch(apiSearch)">
+            <mat-panel-title>
+              <span>{{dataCollect.parseDateTime(apiSearch.date)}}</span>
+            </mat-panel-title>
+            <mat-panel-title>
+              <b>{{apiSearch.url}}</b>
+            </mat-panel-title>
+            <mat-panel-description *ngIf="apiSearch.result && apiSearch.result.date">
+              <span>
+               {{dataCollect.parseTime(apiSearch.result.date - apiSearch.date)}}
+              </span>
+            </mat-panel-description>
+            <mat-panel-description>
+              <app-http-request-status *ngIf="apiSearch.httpRequest" [httpRequest]="apiSearch.httpRequest"
+                                       [direction]="'row'" [layout]="'list'"></app-http-request-status>
+            </mat-panel-description>
+
+            <mat-panel-description>
+              <span *ngIf="!apiSearch.result?.data || !apiSearch.result.data.length">No Results</span>
+              <span
+                *ngIf="apiSearch.result?.data && apiSearch.result.data.length === 1">{{apiSearch.result.data.length}}
+                Result</span>
+              <span *ngIf="apiSearch.result?.data && apiSearch.result.data.length > 1">{{apiSearch.result.data.length}}
+                Results</span>
+            </mat-panel-description>
+
+            <mat-progress-bar *ngIf="!apiSearch.result || apiSearch.result?.loading" mode="indeterminate"></mat-progress-bar>
+
+          </mat-expansion-panel-header>
+          <div *ngIf="apiSearch.httpRequest.status === 200 && apiSearch.result.data">
+            <mat-card>
+              <mat-card-subtitle>
+                <i>{{apiSearch.fullUrl}}</i>
+              </mat-card-subtitle>
+              <mat-card-actions align="end">
+                <button mat-raised-button color="primary"
+                        [disabled]="(!apiSearch.result || !apiSearch.result.selected())"
+                        (click)="dataCollect.importApiResult(apiSearch)">
+                  <mat-icon>input</mat-icon>
+                  <span>
+                    Import {{apiSearch.result.selected()}} / {{apiSearch.result.data.length}}
+                    <span *ngIf="apiSearch.result.selected() !== 1">Results</span>
+                    <span *ngIf="apiSearch.result.selected() === 1">Result</span>
+                  </span>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+            <table>
+              <thead>
+              <tr>
+                <td>
+                  <mat-checkbox class="example-margin"
+                                [checked]="apiSearch.result.allSelected()"
+                                (change)="apiSearch.result.toggleSelectAll()">
+                    Select All
+                  </mat-checkbox>
+                </td>
+                <td>
+
+                </td>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of apiSearch.result.data; index as i ">
+                <td>
+                  <mat-checkbox [(ngModel)]="apiSearch.result.selectedData[i]">
+                  </mat-checkbox>
+                </td>
+                <td>
+                  <mat-accordion (onopend)="dataCollect.api.selectResultData(data)"
+                  >
+                    <mat-expansion-panel [expanded]="dataCollect.api.resultData === data">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          Result #{{(i + 1)}}
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <app-api-result-table *ngIf="apiSearch.result.data" [data]="data"></app-api-result-table>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</div>

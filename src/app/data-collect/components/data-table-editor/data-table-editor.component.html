@@ -1,0 +1,121 @@
+<mat-card class="data-table-editor">
+  <mat-card-content>
+    <table class="fixed-table">
+      <tbody>
+      <tr>
+        <td *ngIf="dataCollect.columns && dataCollect.columns.length" colspan="4">
+          <div class="horizontal-scroll">
+            <table class="csv-table">
+              <thead>
+              <tr>
+                <th *ngFor="let columnName of dataCollect.columns">
+                  <div>
+                    <span>
+                      {{columnName}}
+                    </span>
+                    <span class="spacer"></span>
+                    <button mat-icon-button aria-label="remove attribute"
+                            (click)="dataCollect.removeColumn(columnName)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </th>
+                <th>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let row of dataCollect.rows" (click)="dataCollect.selectedRow = row"
+                  [ngClass]="{selected:(dataCollect.selectedRow === row)}">
+                <td *ngFor="let columnName of dataCollect.columns" (click)="dataCollect.selectedColumn = columnName"
+                    [ngClass]="{selected:(dataCollect.selectedColumn === columnName && dataCollect.selectedRow === row)}">
+                  <div class="table-content">
+                    <div class="result-field"
+                         *ngIf="dataCollect.selectedColumn !== columnName || dataCollect.selectedRow !== row">
+                      <span>{{row[columnName]}}</span>
+                    </div>
+                    <mat-form-field
+                      *ngIf="dataCollect.selectedColumn === columnName && dataCollect.selectedRow === row"
+                      class="full-width" appearance="fill">
+                      <input matInput [(ngModel)]="row[columnName]" placeholder="Value for {{columnName}}"/>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <button mat-icon-button aria-label="delete row"
+                          *ngIf="dataCollect.columns?.length"
+                          (click)="dataCollect.removeRow(row)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+              <tbody>
+              <tbody>
+              <tr>
+                <td *ngFor="let columnName of dataCollect.columns">
+                  ...
+                </td>
+                <td>
+                  <button mat-icon-button
+                          *ngIf="dataCollect.columns?.length"
+                          (click)="dataCollect.addNewRow()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+        <td>
+          <mat-card class="new-column">
+            <mat-card-content>
+              <mat-form-field appearance="fill">
+                <mat-label>New Column</mat-label>
+                <input matInput [(ngModel)]="dataCollect.newColumnName" placeholder="Column Name">
+              </mat-form-field>
+              <button mat-flat-button color="primary" class="full-width"
+                      [disabled]="dataCollect.columnNameValidationError() !== false"
+                      (click)="dataCollect.addNewColumn()">
+                <mat-icon>view_column</mat-icon>
+                <mat-icon>add</mat-icon>
+              </button>
+              <p class="error-message" *ngIf="dataCollect.columnNameValidationError()">
+                <span>{{dataCollect.columnNameValidationError()}}</span>
+              </p>
+              <p class="message" *ngIf="!dataCollect.columnNameValidationError()">
+                <span>OK</span>
+              </p>
+              <button mat-flat-button color="primary" class="full-width"
+                      [disabled]="!dataCollect.columns || !dataCollect.columns.length"
+                      (click)="dataCollect.addNewRow()">
+                <mat-icon>view_agenda</mat-icon>
+                <mat-icon>add</mat-icon>
+              </button>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="csv-separator">
+            <mat-card-content>
+              <label id="radio-group-label">Separator for CSV import and export</label>
+              <mat-radio-group
+                aria-label="CSV separator character"
+                aria-labelledby="radio-group-label"
+                class="radio-group"
+                [(ngModel)]="dataCollect.csvSeparator">
+                <mat-radio-button class="radio-button" *ngFor="let season of dataCollect.csvSeparators"
+                                  [value]="season">
+                  {{season}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </mat-card-content>
+          </mat-card>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
+
+

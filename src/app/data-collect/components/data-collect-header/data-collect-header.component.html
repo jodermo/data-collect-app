@@ -1,0 +1,82 @@
+<input type="file" style="opacity: 0; pointer-events: none; position: absolute;"
+       accept="{{dataCollect.configFileExtension}}"
+       (change)="dataCollect.configUploadChange($event);"
+       #configUpload/>
+<input type="file" style="opacity: 0; pointer-events: none; position: absolute;"
+       accept=".csv"
+       (change)="dataCollect.fileUploadChange($event);"
+       #fileUpload/>
+
+<mat-toolbar color="primary">
+  <span>{{dataCollect.appTitle}}</span>
+  <span class="spacer"></span>
+
+
+  <button *ngIf="dataCollect.started" mat-icon-button aria-label="Reset"
+          [disabled]="!dataCollect.canSave"
+          [matMenuTriggerFor]="resetMenu" #resetMenuTrigger>
+    <mat-icon>autorenew</mat-icon>
+  </button>
+  <mat-menu #resetMenu="matMenu" aria-label="Reset">
+    <ng-container *ngIf="dataCollect.started">
+      <button mat-menu-item (click)="dataCollect.reset(true)">
+        <mat-icon>delete</mat-icon>
+        <span>All</span>
+      </button>
+      <button mat-menu-item (click)="dataCollect.reset()">
+        <mat-icon>delete</mat-icon>
+        <span>CSV Editor</span>
+      </button>
+      <button mat-menu-item (click)="dataCollect.api.reset()">
+        <mat-icon>delete</mat-icon>
+        <span>API Search</span>
+      </button>
+    </ng-container>
+  </mat-menu>
+
+  <button *ngIf="dataCollect.started" mat-icon-button aria-label="Load"
+          [matMenuTriggerFor]="uploadMenu" #uploadMenuTrigger>
+    <mat-icon>upload</mat-icon>
+  </button>
+  <mat-menu #uploadMenu="matMenu" aria-label="Load">
+    <ng-container *ngIf="dataCollect.started">
+      <button mat-menu-item
+              (click)="fileUpload.click()">
+        <mat-icon>table_chart</mat-icon>
+        <span>CSV Table</span>
+      </button>
+
+      <button *ngIf="dataCollect.started"
+              mat-menu-item
+              (click)="configUpload.click()">
+        <mat-icon>settings</mat-icon>
+        <span>Config File</span>
+      </button>
+    </ng-container>
+  </mat-menu>
+
+  <button *ngIf="dataCollect.started" mat-icon-button aria-label="Save"
+          [matMenuTriggerFor]="downloadMenu" #uploadMenuTrigger>
+    <mat-icon>save</mat-icon>
+  </button>
+  <mat-menu #downloadMenu="matMenu" aria-label="Rest Configuration">
+    <ng-container *ngIf="dataCollect.started">
+      <button mat-menu-item
+              [disabled]="(!dataCollect.columns?.length)"
+              (click)="dataCollect.downloadCSV()">
+        <mat-icon>table_chart</mat-icon>
+        <span>CSV Table</span>
+      </button>
+
+      <button mat-menu-item
+              [disabled]="!dataCollect.canSave || !dataCollect.saveData"
+              (click)="dataCollect.downloadConfigFile()">
+        <mat-icon>settings</mat-icon>
+        <span>Config File</span>
+      </button>
+    </ng-container>
+
+
+  </mat-menu>
+
+</mat-toolbar>

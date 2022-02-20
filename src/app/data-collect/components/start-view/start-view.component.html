@@ -1,0 +1,43 @@
+<input type="file" style="opacity: 0; pointer-events: none; position: absolute;"
+       accept="{{dataCollect.configFileExtension}}"
+       (change)="dataCollect.configUploadChange($event);"
+       #configUpload/>
+<input type="file" style="opacity: 0; pointer-events: none; position: absolute;"
+       accept=".csv"
+       (change)="dataCollect.fileUploadChange($event);"
+       #fileUpload/>
+<div class="start-view">
+  <mat-card class="start-view-content">
+    <mat-card-title>{{dataCollect.appSlogan}}</mat-card-title>
+    <mat-card-content>{{dataCollect.appDescription}}</mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button color="primary"
+              *ngIf="dataCollect.storedSession"
+              (click)="dataCollect.start()">
+        <mat-icon>history</mat-icon>
+        <span>
+         Last Session
+        </span>
+      </button>
+      <button mat-flat-button color="primary" (click)="dataCollect.start(true)">
+
+        <mat-icon>note_add</mat-icon>
+        <span>
+          New Session
+        </span>
+      </button>
+      <button mat-flat-button color="primary" (click)="fileUpload.click()">
+        <mat-icon>upload</mat-icon>
+        <span>
+          CSV Table
+        </span>
+      </button>
+      <button mat-flat-button color="primary" (click)="configUpload.click()">
+        <mat-icon>upload</mat-icon>
+        <span>
+          Configuration File
+        </span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,58 @@
+<table *ngIf="direction === 'column' && layout === 'table'" class="http-request-status layout-{{layout}} direction-{{direction}}">
+  <tbody>
+  <ng-container *ngFor="let attribute of attributes">
+    <tr *ngIf="httpRequest[attribute]">
+      <th>
+        {{attribute}}
+      </th>
+      <td>
+        <i>{{httpRequest[attribute]}}</i>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
+<table *ngIf="direction === 'row'  && layout === 'table'" class="http-request-status layout-{{layout}} direction-{{direction}}">
+  <thead>
+  <tr>
+    <ng-container *ngFor="let attribute of attributes">
+      <th *ngIf="httpRequest[attribute]">
+        {{attribute}}
+      </th>
+    </ng-container>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <ng-container *ngFor="let attribute of attributes">
+      <td *ngIf="httpRequest[attribute]">
+        <i>{{httpRequest[attribute]}}</i>
+      </td>
+    </ng-container>
+  </tr>
+  </tbody>
+</table>
+<ul *ngIf="direction === 'column' && layout === 'list'" class="http-request-status layout-{{layout}} direction-{{direction}}">
+  <ng-container *ngFor="let attribute of attributes">
+    <li *ngIf="httpRequest[attribute]">
+      <b>
+        {{attribute}}
+      </b>:
+      <span>
+       <i>{{httpRequest[attribute]}}</i>
+      </span>
+    </li>
+  </ng-container>
+</ul>
+<div *ngIf="direction === 'row' && layout === 'list'" class="http-request-status layout-{{layout}} direction-{{direction}}">
+  <ng-container *ngFor="let attribute of attributes">
+    <div *ngIf="httpRequest[attribute]">
+      <b>
+        {{attribute}}
+      </b>:
+      <span>
+       <i>{{httpRequest[attribute]}}</i>
+      </span>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,18 @@
+app-http-request-status{
+  position: relative;
+  width: 100%;
+}
+.http-request-status {
+  position: relative;
+  width: 100%;
+  display: flex;
+
+  &.layout-list {
+    &.direction-row {
+      & > div {
+        margin-right: 1rem;
+      }
+    }
+  }
+
+}

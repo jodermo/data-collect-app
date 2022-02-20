@@ -1,0 +1,86 @@
+<div class="result-table">
+  <div [ngClass]="{'horizontal-scroll': (!parentKey)}">
+    <table>
+      <thead>
+      <tr>
+        <th [colSpan]="1">Attribute</th>
+        <th [colSpan]="1">Result</th>
+        <th [colSpan]="3">Mapping</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let entryName of entryNames"
+          [ngClass]="{mapped:(dataCollect.isMapped(entryName, parentKey, keyMap))}">
+        <th>
+          <span>{{entryName}}</span>
+        </th>
+        <td [colSpan]="contentColspan(entryName)">
+          <span *ngIf="entryTypes[entryName] !== 'object'">{{entryValues[entryName]}}</span>
+          <app-api-result-table *ngIf="entryTypes[entryName] === 'object'"
+                                [data]="entryValues[entryName]"
+                                [parentKey]="entryName"
+                                [parentKeyMap]="keyMap"
+          ></app-api-result-table>
+        </td>
+        <td *ngIf="entryTypes[entryName] !== 'object'" class="data-mapping">
+          <mat-form-field appearance="fill"
+                          *ngIf="(dataCollect.api.availableMappingAttributes && dataCollect.api.availableMappingAttributes.length)&&
+                !(dataCollect.api.attributeMapping[entryName] && dataCollect.api.attributeMapping[entryName].attribute)">
+            <mat-label>Select attribute</mat-label>
+            <mat-select [(ngModel)]="dataCollect.api.selectedMappingAttribute"
+                        (selectionChange)="dataCollect.api.addAttributeMapping(entryName, keyMap)">
+              <mat-option *ngFor="let attribute of dataCollect.api.availableMappingAttributes" [value]="attribute">
+                {{attribute}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+        <td *ngIf="entryTypes[entryName] !== 'object'">
+          <div *ngIf="dataCollect.isMapped(entryName, parentKey, keyMap)">
+            <span><b>Mapped to: <i>{{dataCollect.api.attributeMapping[entryName].attribute}}</i></b></span>
+          </div>
+          <div
+            *ngIf="!dataCollect.api.attributeMapping[entryName] && dataCollect.api.availableMappingAttributes.length">
+            <div *ngIf="dataCollect.api.mappingAttribute === entryName">
+              <mat-form-field appearance="fill">
+                <mat-label>Select attribute</mat-label>
+                <mat-select [(ngModel)]="dataCollect.api.selectedMappingAttribute"
+                            (selectionChange)="dataCollect.api.addAttributeMapping(entryName, keyMap)">
+                  <mat-option *ngFor="let attribute of dataCollect.api.availableMappingAttributes" [value]="attribute">
+                    {{attribute}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button mat-icon-button aria-label="add mapping"
+                      (click)="dataCollect.api.addAttributeMapping(entryName, keyMap)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td *ngIf="entryTypes[entryName] !== 'object'">
+          <button *ngIf="dataCollect.api.attributeMapping[entryName]" mat-icon-button aria-label="add column"
+                  (click)="dataCollect.api.removeAttributeMapping(entryName)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="edit mapping"
+                  *ngIf="entryTypes[entryName] !== 'object' &&
+                 !(dataCollect.api.attributeMapping[entryName] &&
+                 dataCollect.api.attributeMapping[entryName].attribute) &&
+                 dataCollect.api.mappingAttribute !== entryName"
+                  (click)="addEntry(entryName)">
+            <mat-icon>note_add</mat-icon>
+          </button>
+          <button *ngIf="
+          !dataCollect.api.attributeMapping[entryName] && dataCollect.api.availableMappingAttributes.length &&
+          dataCollect.api.mappingAttribute === entryName" mat-icon-button aria-label="cancel mapping"
+                  (click)="dataCollect.api.mappingAttribute = undefined">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

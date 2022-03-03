@@ -30,6 +30,10 @@ import { DataCollectHeaderComponent } from './components/data-collect-header/dat
 import { DataCollectFooterComponent } from './components/data-collect-footer/data-collect-footer.component';
 import { HttpRequestStatusComponent } from './components/http-request-status/http-request-status.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ApiResultJsonComponent } from './components/api-result-json/api-result-json.component';
+
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { HighlightPlusModule } from 'ngx-highlightjs/plus';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     StartViewComponent,
     DataCollectHeaderComponent,
     DataCollectFooterComponent,
-    HttpRequestStatusComponent
+    HttpRequestStatusComponent,
+    ApiResultJsonComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +68,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatDialogModule,
     MatToolbarModule,
     MatMenuModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    HighlightPlusModule
   ],
   exports: [
     DataCollectComponent,
@@ -86,6 +92,17 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   providers: [
     DataCollectService,
     ApiService,
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        // lineNumbersLoader: () => import('highlightjs-line-numbers.js'), // Optional, only if you want the line numbers
+        languages: {
+          json: () => import('highlight.js/lib/languages/json'),
+          xml: () => import('highlight.js/lib/languages/xml')
+        },
+      }
+    }
   ]
 })
 export class DataCollectModule {

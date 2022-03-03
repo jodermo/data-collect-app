@@ -32,7 +32,7 @@
     <mat-card-actions align="start">
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>URL</mat-label>
-        <input matInput [(ngModel)]="dataCollect.api.url" placeholder="URL">
+        <input matInput [(ngModel)]="dataCollect.api.url" placeholder="URL" (change)="dataCollect.api.inputChange($event)">
       </mat-form-field>
       <p *ngIf="dataCollect.api.urlValidationError()" class="error-message">
         <span >{{dataCollect.api.urlValidationError()}}</span>

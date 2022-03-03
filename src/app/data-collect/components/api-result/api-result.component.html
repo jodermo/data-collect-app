@@ -33,10 +33,12 @@
                 Results</span>
             </mat-panel-description>
 
-            <mat-progress-bar *ngIf="!apiSearch.result || apiSearch.result?.loading" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="!apiSearch.result || apiSearch.result?.loading"
+                              mode="indeterminate"></mat-progress-bar>
 
           </mat-expansion-panel-header>
           <div *ngIf="apiSearch.httpRequest.status === 200 && apiSearch.result.data">
+
             <mat-card>
               <mat-card-subtitle>
                 <i>{{apiSearch.fullUrl}}</i>
@@ -76,6 +78,12 @@
                   </mat-checkbox>
                 </td>
                 <td>
+
+
+
+
+
+
                   <mat-accordion (onopend)="dataCollect.api.selectResultData(data)"
                   >
                     <mat-expansion-panel [expanded]="dataCollect.api.resultData === data">
@@ -84,14 +92,31 @@
                           Result #{{(i + 1)}}
                         </mat-panel-title>
                       </mat-expansion-panel-header>
-                      <app-api-result-table *ngIf="apiSearch.result.data" [data]="data"></app-api-result-table>
+
+                      <mat-tab-group class="flex-item" mat-stretch-tabs animationDuration="0ms" [selectedIndex]="dataCollect.selectedResultFormat.value" (selectedIndexChange)="dataCollect.selectedResultFormat.setValue($event)">
+
+
+
+                        <mat-tab *ngFor="let resultFormat of dataCollect.availableResultFormats(); let index = index" [label]="resultFormat.label">
+                          <ng-container *ngIf="resultFormat.name === 'json'">
+                            <app-api-result-json [data]="apiSearch.result.data"></app-api-result-json>
+                          </ng-container>
+                          <ng-container *ngIf="resultFormat.name === 'table'">
+                            <app-api-result-table *ngIf="apiSearch.result.data" [data]="data"></app-api-result-table>
+                          </ng-container>
+                        </mat-tab>
+                      </mat-tab-group>
+
+
                     </mat-expansion-panel>
                   </mat-accordion>
                 </td>
               </tr>
               </tbody>
             </table>
+
           </div>
+
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card-content>

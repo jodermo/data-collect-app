@@ -70,6 +70,23 @@ export class DataCollectService extends LoadSaveDo {
     })
   };
   selectedTab = new FormControl(0);
+
+  resultFormats = [
+    {
+      name: 'json',
+      label: 'JSON Data'
+    },
+    {
+      name: 'table',
+      label: 'CSV Mapping'
+    },
+  ];
+  availableResultFormats = () => {
+    return this.resultFormats.filter(resultFormat => {
+      return true;
+    })
+  };
+  selectedResultFormat = new FormControl(0);
   canSave = false;
   storedSession = false;
 

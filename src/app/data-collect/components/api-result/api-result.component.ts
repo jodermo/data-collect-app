@@ -7,6 +7,11 @@ import { DataCollectService } from '../../data-collect.service';
   styleUrls: ['./api-result.component.scss']
 })
 export class ApiResultComponent implements OnInit {
+  tabs = [
+    {alias: 'table', title: 'Table'},
+    {alias: 'json', title: 'JSON Data'}
+    ]
+  tab = this.tabs[0];
 
   constructor(public dataCollect: DataCollectService) {
   }

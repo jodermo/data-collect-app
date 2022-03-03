@@ -1,5 +1,6 @@
 import { ApiResult } from './api-result';
 import { ApiService } from '../services/api.service';
+import * as xml2js from 'xml2js';
 
 export class ApiSearch {
 
@@ -13,7 +14,7 @@ export class ApiSearch {
   attributes: string[] = [];
   sendKey = false;
   key?: string;
-  urlSuffix?:string;
+  urlSuffix?: string;
   addSuffix = false;
   keyAttribute?: string;
   sendKeyAsBearer?: boolean;
@@ -22,6 +23,8 @@ export class ApiSearch {
 
   httpRequest = new XMLHttpRequest();
   result = new ApiResult(this);
+  private domParser = new DOMParser();
+  private xmlParser = new xml2js.Parser
 
 
   private callbacks: any = {};
@@ -49,24 +52,48 @@ export class ApiSearch {
   }
 
   private startCall() {
+    const loaded = (data: any) => {
+      if (typeof data === 'object') {
+        data = [data];
+      }
+      this.result.dataType = typeof data;
+      this.result.setResult(data);
+      this.do('loaded', this.result.data);
+    }
     this.httpRequest.onreadystatechange = () => {
       if (this.httpRequest.readyState == 4 && this.httpRequest.status == 200) {
-        let data: any;
+        let data: any = this.httpRequest.responseText;
         this.result.error = undefined;
         this.result.date = Date.now();
+        console.log('result', data);
         try {
-          data = JSON.parse(this.httpRequest.responseText);
+          data = JSON.parse(data);
+          console.log('JSON result', data);
+          loaded(data);
         } catch (e) {
-          data = this.httpRequest.responseText;
+          // data = this.domParser.parseFromString(data, "text/xml");
+          this.xmlParser.parseStringPromise(data)
+            .then((result) => {
+              console.log('XML result', result);
+              loaded(result);
+              console.log('Done');
+            })
+            .catch((err: any) => {
+              console.log('XML err', err);
+              loaded(data);
+              console.log('Done');
+            });
+          this.result.loading = false;
         }
-        if (typeof data === 'object') {
-          data = [data];
-        }
-        this.result.dataType = typeof data;
-        this.result.setResult(data);
-        this.do('loaded', this.result.data);
+
+
+      } else if (this.httpRequest.readyState == 4 && this.httpRequest.status == 0) {
+        console.log('loaded', this.httpRequest);
+        this.result.loading = false;
+        this.do('loaded', undefined);
       } else {
-        this.result.setError(this.httpRequest.status, this.httpRequest.responseText)
+        this.result.setError(this.httpRequest.status, this.httpRequest.responseText);
+        this.result.loading = false;
       }
     }
     this.httpRequest.open(this.method, this.fullUrl, true);

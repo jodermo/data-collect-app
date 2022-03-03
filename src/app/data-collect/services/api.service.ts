@@ -267,6 +267,7 @@ export class ApiService extends LoadSaveDo {
   removeAttributeMapping(key: string) {
     this.attributeMapping[key] = undefined;
     this.updateSession();
+    this.saveSession();
   }
 
   addAttribute(newAttributeName = this.newAttributeName, newAttributeValue = this.newAttributeValue) {
